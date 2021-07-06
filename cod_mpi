@@ -1,0 +1,203 @@
+import random
+import time
+
+def bubblesort(l): 
+    c=0
+    aux=0
+    n = len(l)
+    o=2 #pentru cele 2 atribuiri de mai sus
+    for i in range(n-1): 
+        for j in range(0, n-i-1):
+            c+=1 #la fiecare iteratie se face comparatia din for-ul urmator
+            if l[j] > l[j+1] :
+                aux=l[j+1]
+                l[j+1]=l[j]
+                l[j]=aux
+                o+=3 #pentru cele 3 operatii de mai sus
+    return c,o
+
+def insertie(l):
+    c=0
+    o=0
+    for i in range(1,len(l)):
+        a=l[i]
+        j=i-1
+        o+=2 #se fac cele 2 operatii de mai sus
+        c+=2 #se verifica cele 2 comparatii pentru a intra in while
+        while j>=0 and a<l[j]:
+            l[j+1]=l[j]
+            j-=1
+            o+=2 #se fac cele 2 operatii de mai sus
+            c+=2 #se fac cele 2 comparatii din while, inclusiv cele de iesire din while
+        l[j+1]=a
+        o+=1 #se face operatia de mai sus
+    return c,o
+
+def selectie(l):
+    c=0
+    aux=0
+    o=1 #pentru atribuirea de mai sus
+    for i in range(0,len(l)-1):
+        k=i
+        o+=1 #pentru operatia de mai sus
+        for j in range(i+1,len(l)):
+            c+=1 #de fiecare data se face comparatia de mai jos
+            if l[k]>l[j]:
+                k=j
+                o+=1 #pentru operatia de mai sus
+        c+=1 #se face comparatia de mai jos
+        if k!=i:
+            aux=l[k]
+            l[k]=l[i]
+            l[i]=aux
+            o+=3 #pentru cele 3 operatii de mai sus
+    return c,o
+
+def interclasare(l1,l2,c,o):
+    c=c
+    i=0
+    j=0
+    t=[]    
+    o=o+3 #pentru cele 3 atribuiri de mai sus
+    while i<=len(l1)-1 and j<=len(l2)-1:
+        c+=3 #pentru cele 2 comparatii din while si cea din if
+        if l1[i]<=l2[j]:
+            t.append(l1[i])
+            i+=1
+            o+=2 #pentru cele 2 operatii de mai sus
+        else:
+            t.append(l2[j])
+            j+=1
+            o+=2 #pentru cele 2 operatii de mai sus
+    while i<=len(l1)-1:
+        c+=1 #pentru comparatia din while
+        t.append(l1[i])
+        i+=1
+        o+=2 #pentru cele 2 operatii de mai sus
+    while j<=len(l2)-1:
+        c+=1 #pentru comparatia din while
+        t.append(l2[j])
+        j+=1
+        o+=2 #pentru cele 2 operatii de mai sus
+    return t,c,o
+
+def sort_intercl(l,c,o): #c si o sunt initializate cu 0 din chemarea functiei
+    c=c
+    o=o
+    if 0<len(l)-1:
+        c+=1 #se verifica conditia din if
+        m=(len(l)-1)//2
+        l1=[l[i] for i in range(0,m+1)]
+        l2=[l[i] for i in range(m+1,len(l))]
+        o+=3 #cele 3 operatii de mai sus
+        l1,c,o=sort_intercl(l1,c,o)
+        l2,c,o=sort_intercl(l2,c,o)
+        l,c,o=interclasare(l1,l2,c,o)
+    return l,c,o
+
+def part_quick(l, mic, mare,c,o):     
+    c=c
+    aux=0
+    i = (mic-1) 
+    pivot = l[mare]
+    o=o+3 #pentru cele 2 atribuiri de mai sus
+    for j in range(mic, mare):
+        c+=1 #pentru comparatia din if
+        if l[j] <= pivot: 
+            i = i+1
+            aux=l[j]
+            l[j]=l[i]
+            l[i]=aux
+            o+=4 #pentru cele 4 operatii de mai sus
+    aux=l[mare]
+    l[mare]=l[i+1]
+    l[i+1]=aux
+    o+=3 #pentru cele 3 operatii de mai sus
+    return (i+1),c,o
+  
+def quicksort(l, mic, mare,c,o): #c si o sunt initializate cu 0 din chemarea functiei
+    c=c
+    o=o
+    if len(l) == 1:
+        c+=1 #pentru comparatia din if
+        return l,c,o
+    if mic < mare:
+        c+=1 #pentru comparatia din if
+        pi,c,o=part_quick(l, mic, mare,c,o)
+        l,c,o=quicksort(l, mic, pi-1,c,o) 
+        l,c,o=quicksort(l, pi+1, mare,c,o)
+    return l,c,o
+
+l=[]
+a=100
+#q=10000
+while a>0:
+    a-=1
+    l.append(random.randrange(1,10000))
+    #l.append(q)
+    #q-=1
+l2=[]
+for i in l:
+    l2.append(i)
+x=len(l)-1
+
+print("Bubblesort - nr comparatii = ",bubblesort(l)[0])
+l=[]
+for i in l2:
+    l.append(i)
+start = time.time()
+print("Bubblesort - nr operatii = ",bubblesort(l)[1])
+end = time.time()
+print("Timpul scurs = ",end - start)
+
+l=[]
+for i in l2:
+    l.append(i)
+print("")
+print("Insertie - nr comparatii = ",insertie(l)[0])
+l=[]
+for i in l2:
+    l.append(i)
+start = time.time()
+print("Insertie - nr operatii = ",insertie(l)[1])
+end = time.time()
+print("Timpul scurs = ",end - start)
+
+l=[]
+for i in l2:
+    l.append(i)
+print("")
+print("Selectie - nr comparatii = ",selectie(l)[0])
+l=[]
+for i in l2:
+    l.append(i)
+start = time.time()
+print("Selectie - nr operatii = ",selectie(l)[1])
+end = time.time()
+print("Timpul scurs = ",end - start)
+
+l=[]
+for i in l2:
+    l.append(i)
+print("")
+print("Interclasare - nr comparatii = ",sort_intercl(l,0,0)[1])
+l=[]
+for i in l2:
+    l.append(i)
+start = time.time()
+print("Interclasare - nr operatii = ",sort_intercl(l,0,0)[2])
+end = time.time()
+print("Timpul scurs = ",end - start)
+
+l=[]
+for i in l2:
+    l.append(i)
+print("")
+print("Quicksort - nr comparatii = ",quicksort(l,0,x,0,0)[1])
+l=[]
+for i in l2:
+    l.append(i)
+start = time.time()
+print("Quicksort - nr operatii = ",quicksort(l,0,x,0,0)[2])
+end = time.time()
+print("Timpul scurs = ",end - start)
